@@ -13,53 +13,50 @@ const users = [
     {name : 'Danny', password : '1234'},
 ]
 
+// ตัวแปร username , password : มาจาก input
+// ตัวแปร founduser 
+// ตัวแปร output
+// ตัวแปร loginForm ใช้เพื่อรับ event : submit
+
+// flow
+// 1. check username with users(DB) => loop users[i].name มา check ทั้งหมด
+//      userinput === user[i].name : ผ่านขั้น 1 
+//    และเก็บ user object ที่เจอไว้ที่ foundUser
+//    ถ้าไม่ตรงเลยให้ "invalid login" แล้วออกเลย
+
+// 2. check password ว่าตรงกับ password ของ user นั้นหรือไม่
+//     founduser.password === password : login ผ่าน
+//    ถ้าไม่ตรงเลยให้ "invalid login" แล้วออกเลย
+//    ถ้า password ตรงคือ login ผ่าน
+
+
+
 let inp1 = document.querySelector('#username')
 let inp2 = document.querySelector('#password')
 let output = document.querySelector('.output')
 let foundUser = null
 let loginForm = document.querySelector('#loginform')
-let counter = 0
 
 // inp1.value คือ username
 // inp2.value คือ password
 
-// refactor function 
-// กำหนด parameter กับ return
-// param : username, password
-// return : user object, false
-
-const checkUser = (username, password) => {
-    let resultUser = users.find(el => el.name === username)
-    if(!resultUser) {
-        return false
-    } 
-    if(resultUser.password !== password) {
-        return false
-    }
-    return resultUser
-}   
-
 const hdlSubmit = (e) => {
     e.preventDefault()
-    counter += 1
-
-    foundUser = checkUser(inp1.value, inp2.value)
-    if(foundUser) {
-        output.style.color = 'green'
-        output.style.opacity = '1'
-        output.innerText = 'Login Successful'
-    } else {
+    foundUser = users.find(el => el.name === inp1.value)
+    if(!foundUser) {
         output.style.color = 'red'
-        output.style.opacity = '1'
         output.innerText = 'Invalid login'
-        if(counter >= 3) {
-            inp1.setAttribute('disabled', '')
-            inp2.setAttribute('disabled', '')
-            inp2.nextElementSibling.setAttribute('disabled', '')
-            output.innerText = 'Locked !!'
-        }
+        return
+    } 
+    if(foundUser.password !== inp2.value) {
+        output.style.color = 'red'
+        output.innerText = 'Invalid login'
+        return
     }
+    output.style.color = 'green'
+    output.innerText = 'Login Successful'
 }
+
 
 
 loginForm.addEventListener('submit', hdlSubmit)
